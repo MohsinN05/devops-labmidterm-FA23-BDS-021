@@ -13,6 +13,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'midterm-api'
         CONTAINER_NAME = 'midterm-api'
+        DOCKERHUB_IMAGE = 'mohsinn05/midterm-api'
         STUDENT_ID = 'FA23-BDS-021'
         PIP_DISABLE_PIP_VERSION_CHECK = '1'
         PYTHONDONTWRITEBYTECODE = '1'
