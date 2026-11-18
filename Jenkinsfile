@@ -178,7 +178,10 @@ print(json.dumps(metrics, indent=2))
                 if (env.MIDTERM_SENDER_EMAIL?.trim()) {
                     emailext(
                         from: env.MIDTERM_SENDER_EMAIL,
-                        to: 'qasimalik@gmail.com',
+                        to: sh(
+                            script: "git log -1 --format='%ae'",
+                            returnStdout: true
+                        ).trim(),
                         subject: "CSC418 DevOps Midterm - FA23-BDS-021 - SUCCESS",
                         body: """The ML retraining and deployment pipeline succeeded.
 
