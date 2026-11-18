@@ -83,6 +83,37 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Publish to Docker Hub') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKERHUB_USER',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''#!/usr/bin/env bash
+                        set -euo pipefail
+        
+                        echo "$DOCKERHUB_TOKEN" | docker login \
+                            -u "$DOCKERHUB_USER" \
+                            --password-stdin
+        
+                        docker tag "$IMAGE_NAME:$BUILD_NUMBER" \
+                            "$DOCKERHUB_IMAGE:$BUILD_NUMBER"
+        
+                        docker tag "$IMAGE_NAME:$BUILD_NUMBER" \
+                            "$DOCKERHUB_IMAGE:latest"
+        
+                        docker push "$DOCKERHUB_IMAGE:$BUILD_NUMBER"
+                        docker push "$DOCKERHUB_IMAGE:latest"
+        
+                        docker logout
+                    '''
+                }
+            }
+        }
 
         stage('Deploy API') {
             steps {
